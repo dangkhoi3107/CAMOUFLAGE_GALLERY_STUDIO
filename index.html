@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d0f" />
+  <meta name="description" content="An interactive showcase of AI-generated camouflage compositions, built with latent-space diffusion and structural guidance." />
+  <title>Camouflage Gallery — AI Camouflage Research Showcase</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="Camouflage Gallery">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>
+          <strong>Camouflage Gallery</strong>
+          <small>Explore · Compare · Discover</small>
+        </span>
+      </a>
+
+      <div class="header-actions">
+        <button class="icon-button" id="shareButton" type="button" aria-label="Share this page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a3 3 0 1 0-2.83-4A3 3 0 0 0 15 5c0 .21.02.42.06.62L8.91 9.1A3 3 0 0 0 7 8.42a3 3 0 1 0 1.91 5.48l6.15 3.48A3 3 0 0 0 15 18a3 3 0 1 0 .94-2.18l-6.16-3.49c.14-.43.14-.9 0-1.33l6.16-3.49A3 3 0 0 0 18 8Z"/></svg>
+        </button>
+        <button class="primary-button compact" id="qrButton" type="button">QR Code</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">GENERATIVE AI RESEARCH</p>
+        <h1>Can you find the hidden animal?</h1>
+        <p class="hero-description">
+          AI-generated camouflage compositions that blend real subjects into new backgrounds through latent-space diffusion and structural guidance.
+        </p>
+        <div class="hero-cta-row">
+          <a class="primary-button" href="#galleryTitle">Explore the Gallery</a>
+        </div>
+        <div class="hero-stats" aria-label="Gallery statistics">
+          <div><strong id="itemCount">—</strong><span>Total Results</span></div>
+          <div><strong id="speciesCount">—</strong><span>Animal Categories</span></div>
+          <div><strong id="variationCount">—</strong><span>Generated Variations</span></div>
+        </div>
+        <ol class="hero-guide">
+          <li>Select a result</li>
+          <li>Open the viewer</li>
+          <li>Drag to compare</li>
+        </ol>
+      </div>
+      <div class="hero-visual" id="heroVisual" hidden>
+        <div class="hero-visual-frame">
+          <img id="heroFeaturedImage" alt="" loading="eager" decoding="async" />
+          <span class="hero-visual-badge">Generated Output</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery-section" aria-labelledby="galleryTitle">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">INTERACTIVE COLLECTION</p>
+          <h2 id="galleryTitle">Generated Results</h2>
+        </div>
+        <label class="search-box">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>
+          <input id="searchInput" type="search" placeholder="Search by animal or tag…" autocomplete="off" />
+        </label>
+      </div>
+
+      <div class="filter-chips" id="filterChips" role="group" aria-label="Filter by animal" hidden></div>
+
+      <div class="gallery-grid" id="galleryGrid" aria-live="polite"></div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <strong>No results found</strong>
+        <span>Try a different search term.</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Tap a card · Drag to compare · Share the experience</p>
+  </footer>
+
+  <div class="modal" id="viewerModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <header class="modal-header">
+        <div>
+          <p class="eyebrow">RESULT DETAILS</p>
+          <h2 id="modalTitle">Result title</h2>
+        </div>
+        <button class="icon-button close-button" type="button" data-close-modal aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="viewer-layout">
+        <section class="viewer-main">
+          <div class="view-tabs" id="viewTabs" role="tablist" aria-label="Choose image view">
+            <button class="view-tab active" type="button" data-view="output">Generated Output</button>
+            <button class="view-tab" type="button" data-view="object">Original Object</button>
+            <button class="view-tab" type="button" data-view="background">Background Input</button>
+            <button class="view-tab" type="button" data-view="compare-object">Output vs Object</button>
+            <button class="view-tab" type="button" data-view="compare-background">Output vs Background</button>
+          </div>
+
+          <div class="viewer-stage" id="viewerStage">
+            <div class="single-image-view" id="singleImageView">
+              <img id="viewerImage" alt="" draggable="false" />
+            </div>
+
+            <div class="compare-view" id="compareView" hidden>
+              <div class="compare-frame" id="compareFrame">
+                <img class="compare-base" id="compareBase" alt="" draggable="false" />
+                <div class="compare-overlay" id="compareOverlay">
+                  <img id="compareOutput" alt="" draggable="false" />
+                </div>
+                <div class="compare-divider" id="compareDivider" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="zoom-control-bar" id="zoomToolbar">
+            <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
+            <span id="zoomValue">100%</span>
+            <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
+            <button type="button" data-zoom="reset" aria-label="Reset zoom">Reset</button>
+          </div>
+
+          <div class="compare-control-bar" id="compareControlBar" hidden>
+            <div class="compare-control-labels">
+              <span class="compare-control-label left" id="compareLabelLeft">Original Object</span>
+              <span class="compare-control-label right" id="compareLabelRight">Generated Output</span>
+            </div>
+            <input class="compare-range" id="compareRange" type="range" min="0" max="100" value="50" aria-label="Drag to compare images" />
+          </div>
+        </section>
+
+        <aside class="viewer-sidebar">
+          <p class="modal-description" id="modalDescription"></p>
+
+          <details class="technical-details" id="technicalDetails" hidden>
+            <summary>Technical Details</summary>
+            <dl class="tech-grid" id="technicalGrid"></dl>
+          </details>
+
+          <div class="modal-navigation">
+            <button class="secondary-button" id="previousButton" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
+              Previous Result
+            </button>
+            <button class="secondary-button" id="nextButton" type="button">
+              Next Result
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
+            </button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal qr-modal" id="qrModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+    <div class="modal-backdrop" data-close-qr></div>
+    <div class="qr-panel">
+      <button class="icon-button close-button" type="button" data-close-qr aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <p class="eyebrow">OPEN ON YOUR PHONE</p>
+      <h2 id="qrTitle">Scan to explore on mobile</h2>
+      <div class="qr-canvas" id="qrCanvas"></div>
+      <p id="qrUrl" class="qr-url"></p>
+      <button class="primary-button" id="copyLinkButton" type="button">Copy Link</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07nN7Eum7meUQxqgufEJKatLr6lQ3w3ek8SLtdW7ujhN9Kz4vMZ9IvzVdP+1Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

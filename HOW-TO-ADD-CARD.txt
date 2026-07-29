@@ -1,0 +1,39 @@
+CAMOUFLAGE GALLERY - CACH THEM CARD MOI
+
+1. Vao thu muc:
+   INPUT\
+
+2. Tao mot folder moi, vi du:
+   INPUT\6\
+
+3. Dat cac file vao folder do, dung ten (phan mo rong co the la
+   .png, .jpg, .jpeg, .webp hoac .avif):
+   output.*       = anh ket qua camouflage
+   object.*       = anh con vat / object goc
+   background.*   = anh background goc
+   meta.json      = metadata (khong bat buoc)
+
+4. Neu co meta.json, cac truong duoc doc tu ca cap ngoai lan trong "job":
+   animal / animals, seed, bg_strength, guidance_scale, guidance_sub,
+   guidance_bg, mask_mode, blend_profile, control_scales, title,
+   description, tags, featured...
+   Thieu title/description/tags thi build script tu tao noi dung du phong
+   dua tren du lieu that (khong bia con vat, khong bia phuong phap).
+
+5. Chay:
+   npm run build
+   hoac
+   npm run dev
+
+6. Mo website:
+   http://localhost:3000
+   Neu port 3000 bi chiem:
+   set PORT=3001 && npm run dev
+   Sau do mo http://localhost:3001
+
+7. Card moi tu xuat hien theo dung thu tu tu nhien cua ten folder
+   (vi du: 1, 1_002, 1_003, 2, 2_002, ...).
+
+Khong can sua app.js hoac khai bao path thu cong.
+Neu thieu output/object/background, build se canh bao va bo qua folder do
+(khong lam crash build).

@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Camouflage Card Builder</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">C</div>
+      <div>
+        <strong>Card Builder</strong>
+        <span>Chuẩn bị dữ liệu cho Camouflage Gallery</span>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="button button-ghost" id="openInboxButton" type="button">Mở inbox</button>
+      <button class="button button-ghost" id="openOutputButton" type="button">Mở gallery</button>
+      <button class="button button-primary" id="buildButton" type="button">Build website</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <aside class="sidebar panel">
+      <section class="upload-zone" id="dropZone" tabindex="0">
+        <input id="filePicker" type="file" accept="image/*" multiple hidden>
+        <input id="folderPicker" type="file" accept="image/*" multiple webkitdirectory hidden>
+        <div class="upload-icon" aria-hidden="true">↥</div>
+        <strong>Thả ảnh vào đây</strong>
+        <p>Hoặc chọn nhiều ảnh / nguyên thư mục.</p>
+        <div class="upload-actions">
+          <button class="mini-button" id="chooseFilesButton" type="button">Chọn ảnh</button>
+          <button class="mini-button" id="chooseFolderButton" type="button">Chọn folder</button>
+        </div>
+        <div class="upload-progress" id="uploadProgress" hidden>
+          <span id="uploadProgressText">Đang tải...</span>
+          <div><i id="uploadProgressBar"></i></div>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="Tiến độ">
+        <article><b id="totalCount">0</b><span>Tổng</span></article>
+        <article><b id="pendingCount">0</b><span>Chờ xử lý</span></article>
+        <article><b id="doneCount">0</b><span>Đã lưu</span></article>
+        <article><b id="skippedCount">0</b><span>Bỏ qua</span></article>
+      </section>
+
+      <section class="list-controls">
+        <label>
+          <span>Cách gom nhóm</span>
+          <select id="groupMode">
+            <option value="smart">Thông minh theo tên</option>
+            <option value="folders">Mỗi folder là một nhóm</option>
+            <option value="sequential">Cứ 3 ảnh liên tiếp</option>
+          </select>
+        </label>
+        <label>
+          <span>Hiển thị</span>
+          <select id="statusFilter">
+            <option value="pending">Chờ xử lý</option>
+            <option value="all">Tất cả</option>
+            <option value="done">Đã lưu</option>
+            <option value="skipped">Bỏ qua</option>
+            <option value="incomplete">Thiếu ảnh</option>
+          </select>
+        </label>
+        <div class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="Tìm group...">
+        </div>
+      </section>
+
+      <div class="group-list" id="groupList" aria-live="polite"></div>
+
+      <div class="sidebar-footer">
+        <button class="text-button" id="refreshButton" type="button">↻ Quét lại ảnh</button>
+        <button class="text-button danger" id="resetButton" type="button">Đặt lại tiến độ</button>
+      </div>
+    </aside>
+
+    <section class="workspace panel">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-visual">
+          <span></span><span></span><span></span>
+        </div>
+        <h1>Thêm ảnh để bắt đầu</h1>
+        <p>Mỗi card cần đúng ba ảnh: output, object và background. Tool sẽ tự gom nhóm và đổi tên khi lưu.</p>
+        <button class="button button-primary" id="emptyChooseButton" type="button">Chọn nhiều ảnh</button>
+      </div>
+
+      <div class="editor" id="editor" hidden>
+        <header class="editor-header">
+          <div>
+            <div class="eyebrow" id="groupSource">GROUP</div>
+            <h1 id="groupHeading">Card 001</h1>
+            <p id="groupStatusText">Kiểm tra vai trò của ba ảnh trước khi lưu.</p>
+          </div>
+          <div class="navigation-buttons">
+            <button class="icon-button" id="previousButton" type="button" title="Nhóm trước">←</button>
+            <span id="positionText">1 / 1</span>
+            <button class="icon-button" id="nextButton" type="button" title="Nhóm sau">→</button>
+          </div>
+        </header>
+
+        <div class="incomplete-banner" id="incompleteBanner" hidden>
+          Nhóm này chưa đủ ba ảnh. Hãy thêm ảnh vào inbox hoặc chọn cách gom nhóm khác.
+        </div>
+
+        <section class="preview-grid" id="previewGrid"></section>
+
+        <div class="role-tools">
+          <button class="mini-button" id="autoAssignButton" type="button">Tự nhận diện tên</button>
+          <button class="mini-button" id="rotateRolesButton" type="button">Xoay vai trò</button>
+          <span>Click vào nhãn dưới ảnh để đổi vai trò.</span>
+        </div>
+
+        <section class="form-card">
+          <div class="form-grid two-columns">
+            <label>
+              <span>Tên folder <em>*</em></span>
+              <input id="folderNameInput" type="text" spellcheck="false" placeholder="fox-forest-001">
+              <small>Sẽ tự chuyển thành dạng slug, ví dụ <code>fox-forest-001</code>.</small>
+            </label>
+            <label>
+              <span>Tiêu đề card <em>*</em></span>
+              <input id="titleInput" type="text" placeholder="Hidden Fox">
+            </label>
+          </div>
+
+          <label>
+            <span>Description</span>
+            <textarea id="descriptionInput" rows="4" placeholder="Mô tả ngắn về kết quả camouflage..."></textarea>
+          </label>
+
+          <div class="description-tools">
+            <select id="descriptionLanguage" aria-label="Ngôn ngữ mẫu mô tả">
+              <option value="vi">Mẫu tiếng Việt</option>
+              <option value="en">English template</option>
+            </select>
+            <button class="mini-button" id="generateDescriptionButton" type="button">Tạo mô tả mẫu</button>
+            <span>Bạn có thể sửa lại nội dung trước khi lưu.</span>
+          </div>
+
+          <div class="form-grid two-columns">
+            <label>
+              <span>Tags</span>
+              <input id="tagsInput" type="text" placeholder="fox, forest, camouflage">
+              <small>Phân cách bằng dấu phẩy.</small>
+            </label>
+            <div class="options-box">
+              <label class="check-row"><input id="featuredInput" type="checkbox"> <span>Đánh dấu featured</span></label>
+              <label class="check-row"><input id="moveFilesInput" type="checkbox"> <span>Di chuyển ảnh khỏi inbox sau khi lưu</span></label>
+              <label class="select-row">
+                <span>Nếu trùng folder</span>
+                <select id="conflictInput">
+                  <option value="increment">Tự thêm số</option>
+                  <option value="overwrite">Ghi đè</option>
+                  <option value="error">Báo lỗi</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <footer class="editor-footer">
+          <div class="shortcut-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> để lưu nhanh</div>
+          <div class="footer-actions">
+            <button class="button button-ghost" id="skipButton" type="button">Bỏ qua</button>
+            <button class="button button-primary save-button" id="saveButton" type="button">
+              <span>Lưu & tiếp theo</span><b>→</b>
+            </button>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="console-dialog" id="consoleDialog">
+    <div class="dialog-header">
+      <div>
+        <strong id="consoleTitle">Build website</strong>
+        <span id="consoleSubtitle">Đang chạy npm run build...</span>
+      </div>
+      <button class="icon-button" id="closeConsoleButton" type="button">×</button>
+    </div>
+    <pre id="consoleOutput">Đang xử lý...</pre>
+  </dialog>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

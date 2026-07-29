@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(node scripts/build.mjs)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(node \"C:\\\\Users\\\\dangk\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--CODE-camouflage-gallery-studio\\\\3f9ccdea-decd-42a2-ad9c-aa3a8f7b0876\\\\scratchpad\\\\check-manifest.mjs\")",
+      "Bash(chromium-cli --help)",
+      "Bash(node -e \"require.resolve\\('playwright'\\)\")",
+      "Bash(npx --no-install playwright --version)",
+      "Bash(node --check app.js)",
+      "Bash(node --check scripts/build.mjs)",
+      "Bash(node --check scripts/dev-server.mjs)",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"manifest status: %{http_code}\\\\n\" http://localhost:3000/gallery/manifest.json)",
+      "Bash(curl -s -o /dev/null -w \"output.png status: %{http_code}\\\\n\" http://localhost:3000/gallery/1/output.png)",
+      "Bash(curl -s -o /dev/null -w \"object.jpg status: %{http_code}\\\\n\" http://localhost:3000/gallery/1/object.jpg)",
+      "Bash(curl -s -o /dev/null -w \"background.png status: %{http_code}\\\\n\" http://localhost:3000/gallery/1/background.png)",
+      "Bash(curl -s -o /dev/null -w \"app.js status: %{http_code}\\\\n\" http://localhost:3000/app.js)",
+      "Bash(curl -s http://localhost:3000/gallery/manifest.json)",
+      "Read(//c/GAME/THESIS/ITCSIU21196_PhamNguyenDangKhoi/**)",
+      "Bash(python -m py_compile \"c:/GAME/THESIS/ITCSIU21196_PhamNguyenDangKhoi/main.py\")",
+      "Bash(python -c \"from PIL import Image; print\\(Image.__version__ if hasattr\\(Image,'__version__'\\) else 'PIL available'\\)\")",
+      "Bash(where python *)",
+      "Bash(npm view *)",
+      "Bash(mv new_input/5 INPUT/6)",
+      "Bash(mv new_input/5_002 INPUT/7)",
+      "Bash(rmdir new_input)"
+    ],
+    "additionalDirectories": [
+      "c:\\GAME\\THESIS\\ITCSIU21196_PhamNguyenDangKhoi"
+    ]
+  }
+}
