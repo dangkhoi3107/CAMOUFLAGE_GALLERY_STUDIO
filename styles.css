@@ -280,19 +280,14 @@ main { overflow: hidden; }
 .modal.open .modal-backdrop { opacity: 1; }
 .modal-panel {
   position: absolute;
-  inset: 18px;
-  max-width: 1500px;
-  margin: auto;
+  inset: 0;
   overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 26px;
   background: #0e1114;
-  box-shadow: var(--shadow);
   opacity: 0;
-  transform: translateY(24px) scale(.97);
+  transform: scale(.98);
   transition: opacity .35s var(--ease), transform .4s var(--ease);
 }
-.modal.open .modal-panel { opacity: 1; transform: translateY(0) scale(1); }
+.modal.open .modal-panel { opacity: 1; transform: scale(1); }
 .modal-header { height: 76px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
 .modal-header h2 { margin: 0; font-size: clamp(19px, 2.6vw, 27px); }
 .modal-header .eyebrow { margin-bottom: 3px; }
@@ -309,8 +304,8 @@ main { overflow: hidden; }
   overflow: hidden;
   display: flex;
   align-items: stretch;
-  gap: 14px;
-  padding: 24px;
+  gap: 12px;
+  padding: 14px;
   background: #090b0d;
 }
 .viewer-stage.is-loading::after {
@@ -442,7 +437,6 @@ main { overflow: hidden; }
   .hero { min-height: auto; grid-template-columns: 1fr; gap: 32px; padding-top: 56px; }
   .hero-visual { order: -1; }
   .hero-visual-frame { max-width: 340px; }
-  .modal-panel { inset: 0; border-radius: 0; }
 }
 
 @media (max-width: 650px) {
