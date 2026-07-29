@@ -235,7 +235,7 @@ async function main() {
   await fs.mkdir(distDir, { recursive: true });
   await fs.mkdir(distGalleryDir, { recursive: true });
 
-  for (const file of ['index.html', 'styles.css', 'app.js']) {
+  for (const file of ['index.html', 'styles.css', 'app.js', 'qrcode.min.js']) {
     await fs.copyFile(path.join(root, file), path.join(distDir, file));
   }
 
