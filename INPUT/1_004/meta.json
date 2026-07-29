@@ -85,12 +85,12 @@
   "device": "cuda",
   "dtype": "float16",
   "job": {
-    "animals": "hamster",
-    "image_path": "/kaggle/input/datasets/iamsouravbanerjee/animal-image-dataset-90-different-animals/animals/animals/hamster/016f41b537.jpg",
-    "name": "batch_033_hamster_s00_016f41b537_bg00_7d2652c95ab57a4ae5fb72d44d47196c_seed3300010",
-    "seed": 3300010,
+    "animals": "deer",
+    "image_path": "/kaggle/input/datasets/iamsouravbanerjee/animal-image-dataset-90-different-animals/animals/animals/deer/03d871997f.jpg",
+    "name": "batch_017_deer_s00_03d871997f_bg03_bg22_seed1700040",
+    "seed": 1700040,
     "prompt_bg": "",
-    "prompt_sub": "a hidden hamster silhouette seamlessly integrated into the background, subtle facial cues, optical illusion, camouflage",
+    "prompt_sub": "a hidden deer silhouette seamlessly integrated into the background, subtle facial cues, optical illusion, camouflage",
     "bg_strength": 0.52
   }
 }

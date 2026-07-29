@@ -99,66 +99,31 @@
       </header>
 
       <div class="viewer-layout">
-        <section class="viewer-main">
-          <div class="view-tabs" id="viewTabs" role="tablist" aria-label="Choose image view">
-            <button class="view-tab active" type="button" data-view="output">Generated Output</button>
-            <button class="view-tab" type="button" data-view="object">Original Object</button>
-            <button class="view-tab" type="button" data-view="background">Background Input</button>
-            <button class="view-tab" type="button" data-view="compare-object">Output vs Object</button>
-            <button class="view-tab" type="button" data-view="compare-background">Output vs Background</button>
-          </div>
+        <div class="viewer-stage" id="viewerStage">
+          <button class="stage-nav prev" id="previousButton" type="button" aria-label="Previous result">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
+          </button>
 
-          <div class="viewer-stage" id="viewerStage">
-            <div class="single-image-view" id="singleImageView">
-              <img id="viewerImage" alt="" draggable="false" />
+          <div class="compare-frame" id="compareFrame">
+            <img class="compare-base" id="compareBase" alt="" draggable="false" />
+            <div class="compare-overlay" id="compareOverlay">
+              <img id="compareOutput" alt="" draggable="false" />
             </div>
-
-            <div class="compare-view" id="compareView" hidden>
-              <div class="compare-frame" id="compareFrame">
-                <img class="compare-base" id="compareBase" alt="" draggable="false" />
-                <div class="compare-overlay" id="compareOverlay">
-                  <img id="compareOutput" alt="" draggable="false" />
-                </div>
-                <div class="compare-divider" id="compareDivider" aria-hidden="true"></div>
-              </div>
-            </div>
+            <div class="compare-divider" id="compareDivider" aria-hidden="true"></div>
           </div>
 
-          <div class="zoom-control-bar" id="zoomToolbar">
-            <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
-            <span id="zoomValue">100%</span>
-            <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
-            <button type="button" data-zoom="reset" aria-label="Reset zoom">Reset</button>
+          <button class="stage-nav next" id="nextButton" type="button" aria-label="Next result">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+
+        <div class="compare-control-bar" id="compareControlBar">
+          <div class="compare-control-labels">
+            <span class="compare-control-label left">Input Object</span>
+            <span class="compare-control-label right">Generated Output</span>
           </div>
-
-          <div class="compare-control-bar" id="compareControlBar" hidden>
-            <div class="compare-control-labels">
-              <span class="compare-control-label left" id="compareLabelLeft">Original Object</span>
-              <span class="compare-control-label right" id="compareLabelRight">Generated Output</span>
-            </div>
-            <input class="compare-range" id="compareRange" type="range" min="0" max="100" value="50" aria-label="Drag to compare images" />
-          </div>
-        </section>
-
-        <aside class="viewer-sidebar">
-          <p class="modal-description" id="modalDescription"></p>
-
-          <details class="technical-details" id="technicalDetails" hidden>
-            <summary>Technical Details</summary>
-            <dl class="tech-grid" id="technicalGrid"></dl>
-          </details>
-
-          <div class="modal-navigation">
-            <button class="secondary-button" id="previousButton" type="button">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
-              Previous Result
-            </button>
-            <button class="secondary-button" id="nextButton" type="button">
-              Next Result
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
-            </button>
-          </div>
-        </aside>
+          <input class="compare-range" id="compareRange" type="range" min="0" max="100" value="50" aria-label="Drag to compare input object and generated output" />
+        </div>
       </div>
     </div>
   </div>

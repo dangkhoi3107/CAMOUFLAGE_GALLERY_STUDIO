@@ -85,12 +85,12 @@
   "device": "cuda",
   "dtype": "float16",
   "job": {
-    "animals": "donkey",
-    "image_path": "/kaggle/input/datasets/iamsouravbanerjee/animal-image-dataset-90-different-animals/animals/animals/donkey/0409cd9133.jpg",
-    "name": "batch_020_donkey_s00_0409cd9133_bg00_7d2652c95ab57a4ae5fb72d44d47196c_seed2000010",
-    "seed": 2000010,
+    "animals": "deer",
+    "image_path": "/kaggle/input/datasets/iamsouravbanerjee/animal-image-dataset-90-different-animals/animals/animals/deer/03d871997f.jpg",
+    "name": "batch_017_deer_s00_03d871997f_bg02_bg3_seed1700030",
+    "seed": 1700030,
     "prompt_bg": "",
-    "prompt_sub": "a hidden donkey silhouette seamlessly integrated into the background, subtle facial cues, optical illusion, camouflage",
+    "prompt_sub": "a hidden deer silhouette seamlessly integrated into the background, subtle facial cues, optical illusion, camouflage",
     "bg_strength": 0.52
   }
 }

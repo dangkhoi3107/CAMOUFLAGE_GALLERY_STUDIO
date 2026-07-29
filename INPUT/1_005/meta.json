@@ -85,12 +85,12 @@
   "device": "cuda",
   "dtype": "float16",
   "job": {
-    "animals": "hare",
-    "image_path": "/kaggle/input/datasets/iamsouravbanerjee/animal-image-dataset-90-different-animals/animals/animals/hare/01d3d9ad9a.jpg",
-    "name": "batch_034_hare_s00_01d3d9ad9a_bg00_7d2652c95ab57a4ae5fb72d44d47196c_seed3400010",
-    "seed": 3400010,
+    "animals": "deer",
+    "image_path": "/kaggle/input/datasets/iamsouravbanerjee/animal-image-dataset-90-different-animals/animals/animals/deer/03d871997f.jpg",
+    "name": "batch_017_deer_s00_03d871997f_bg04_f36e018bfbcf3d240565af84a45ac8f6_seed1700050",
+    "seed": 1700050,
     "prompt_bg": "",
-    "prompt_sub": "a hidden hare silhouette seamlessly integrated into the background, subtle facial cues, optical illusion, camouflage",
+    "prompt_sub": "a hidden deer silhouette seamlessly integrated into the background, subtle facial cues, optical illusion, camouflage",
     "bg_strength": 0.52
   }
 }

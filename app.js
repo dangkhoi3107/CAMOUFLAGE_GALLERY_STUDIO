@@ -4,17 +4,7 @@ const state = {
   items: [],
   filteredItems: [],
   activeIndex: 0,
-  activeAnimal: null,
-  activeView: 'output',
-  compareTarget: 'object',
-  zoom: 1,
-  panX: 0,
-  panY: 0,
-  dragging: false,
-  dragStartX: 0,
-  dragStartY: 0,
-  panStartX: 0,
-  panStartY: 0
+  activeAnimal: null
 };
 
 const elements = {
@@ -30,12 +20,7 @@ const elements = {
   heroFeaturedImage: document.querySelector('#heroFeaturedImage'),
   modal: document.querySelector('#viewerModal'),
   modalTitle: document.querySelector('#modalTitle'),
-  modalDescription: document.querySelector('#modalDescription'),
-  viewTabs: document.querySelector('#viewTabs'),
   viewerStage: document.querySelector('#viewerStage'),
-  singleView: document.querySelector('#singleImageView'),
-  viewerImage: document.querySelector('#viewerImage'),
-  compareView: document.querySelector('#compareView'),
   compareFrame: document.querySelector('#compareFrame'),
   compareBase: document.querySelector('#compareBase'),
   compareOutput: document.querySelector('#compareOutput'),
@@ -43,12 +28,6 @@ const elements = {
   compareDivider: document.querySelector('#compareDivider'),
   compareControlBar: document.querySelector('#compareControlBar'),
   compareRange: document.querySelector('#compareRange'),
-  compareLabelLeft: document.querySelector('#compareLabelLeft'),
-  compareLabelRight: document.querySelector('#compareLabelRight'),
-  zoomToolbar: document.querySelector('#zoomToolbar'),
-  zoomValue: document.querySelector('#zoomValue'),
-  technicalDetails: document.querySelector('#technicalDetails'),
-  technicalGrid: document.querySelector('#technicalGrid'),
   previousButton: document.querySelector('#previousButton'),
   nextButton: document.querySelector('#nextButton'),
   qrModal: document.querySelector('#qrModal'),
@@ -59,12 +38,6 @@ const elements = {
   copyLinkButton: document.querySelector('#copyLinkButton'),
   toast: document.querySelector('#toast'),
   gallerySection: document.querySelector('.gallery-section')
-};
-
-const VIEW_LABELS = {
-  output: 'Generated Output',
-  object: 'Original Object',
-  background: 'Background Input'
 };
 
 function escapeHtml(value = '') {
@@ -200,42 +173,14 @@ function buildFilterChips(items) {
   ].join('');
 }
 
-function resetTransform() {
-  state.zoom = 1;
-  state.panX = 0;
-  state.panY = 0;
-  updateTransform();
-}
-
-function updateTransform() {
-  elements.viewerImage.style.transform = `translate3d(${state.panX}px, ${state.panY}px, 0) scale(${state.zoom})`;
-  elements.zoomValue.textContent = `${Math.round(state.zoom * 100)}%`;
-}
-
-function setZoom(nextZoom) {
-  state.zoom = Math.min(4, Math.max(1, nextZoom));
-  if (state.zoom === 1) {
-    state.panX = 0;
-    state.panY = 0;
-  }
-  updateTransform();
-}
-
 function animateElement(element, keyframes, options = {}) {
   if (!element || window.matchMedia('(prefers-reduced-motion: reduce)').matches || !element.animate) return;
   element.getAnimations().forEach((animation) => animation.cancel());
   element.animate(keyframes, { duration: 320, easing: 'cubic-bezier(.22,1,.36,1)', ...options });
 }
 
-function animateImageSwap() {
-  animateElement(elements.singleView, [
-    { opacity: 0, transform: 'scale(.98)' },
-    { opacity: 1, transform: 'scale(1)' }
-  ], { duration: 300 });
-}
-
 function animateCompareSwap() {
-  animateElement(elements.compareView, [
+  animateElement(elements.compareFrame, [
     { opacity: 0, transform: 'scale(.98)' },
     { opacity: 1, transform: 'scale(1)' }
   ], { duration: 300 });
@@ -268,7 +213,7 @@ function createRipple(button, event) {
 }
 
 // Shows a subtle shimmer on the stage until the active image(s) finish loading,
-// so switching tabs/cards never leaves a blank frame while a network fetch is in flight.
+// so switching cards never leaves a blank frame while a network fetch is in flight.
 function trackImageLoad(...imageEls) {
   elements.viewerStage.classList.add('is-loading');
   let pending = imageEls.length;
@@ -288,97 +233,25 @@ function setImageSrc(imgEl, src, alt) {
   if (imgEl.getAttribute('src') !== src) imgEl.src = src;
 }
 
-function syncCompareImageSize() {
-  const { width, height } = elements.compareFrame.getBoundingClientRect();
-  elements.compareOutput.style.width = `${width}px`;
-  elements.compareOutput.style.height = `${height}px`;
-}
-
 function updateComparePosition(value) {
   const percent = Number(value);
-  syncCompareImageSize();
-  elements.compareOverlay.style.width = `${percent}%`;
+  elements.compareOverlay.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
   elements.compareDivider.style.left = `${percent}%`;
   elements.compareRange.style.setProperty('--fill', `${percent}%`);
 }
 
-function updateCompareTarget(target) {
-  state.compareTarget = target;
+function renderCompare(animate) {
   const item = getActiveItem();
-  const leftLabel = target === 'object' ? 'Original Object' : 'Background Input';
-
-  setImageSrc(elements.compareBase, item.images[target], `${leftLabel} — ${item.title}`);
+  setImageSrc(elements.compareBase, item.images.object, `Input Object — ${item.title}`);
   setImageSrc(elements.compareOutput, item.images.output, `Generated Output — ${item.title}`);
   trackImageLoad(elements.compareBase, elements.compareOutput);
-
-  elements.compareLabelLeft.textContent = leftLabel;
-  elements.compareLabelRight.textContent = 'Generated Output';
-  elements.compareRange.setAttribute('aria-label', `Drag to compare ${leftLabel} and Generated Output`);
   updateComparePosition(elements.compareRange.value);
-}
-
-function setActiveView(view) {
-  const previousView = state.activeView;
-  state.activeView = view;
-  document.querySelectorAll('[data-view]').forEach((button) => button.classList.toggle('active', button.dataset.view === view));
-
-  const isCompare = view.startsWith('compare-');
-  elements.singleView.hidden = isCompare;
-  elements.compareView.hidden = !isCompare;
-  elements.compareControlBar.hidden = !isCompare;
-  elements.zoomToolbar.hidden = isCompare;
-
-  const modalOpen = elements.modal.classList.contains('open');
-
-  if (!isCompare) {
-    const item = getActiveItem();
-    setImageSrc(elements.viewerImage, item.images[view], `${VIEW_LABELS[view]} — ${item.title}`);
-    trackImageLoad(elements.viewerImage);
-    resetTransform();
-    if (modalOpen && previousView !== view) animateImageSwap();
-  } else {
-    const target = view === 'compare-object' ? 'object' : 'background';
-    updateCompareTarget(target);
-    if (modalOpen && previousView !== view) animateCompareSwap();
-  }
-}
-
-const TECHNICAL_FIELDS = [
-  ['animal', 'Animal', (value) => String(value)],
-  ['seed', 'Seed', (value) => String(value)],
-  ['backgroundStrength', 'Background Strength', (value) => `${Math.round(Number(value) * 100)}%`],
-  ['guidanceScale', 'Guidance Scale', formatTechnicalNumber],
-  ['subjectGuidance', 'Subject Guidance', formatTechnicalNumber],
-  ['backgroundGuidance', 'Background Guidance', formatTechnicalNumber],
-  ['maskMode', 'Mask Mode', (value) => String(value)],
-  ['blendProfile', 'Blend Profile', (value) => String(value)],
-  ['controlScales', 'Control Scales', (value) => (Array.isArray(value) ? value.map(formatTechnicalNumber).join(' / ') : String(value))]
-];
-
-function formatTechnicalNumber(value) {
-  const num = Number(value);
-  if (Number.isNaN(num)) return String(value);
-  return Number.isInteger(num) ? String(num) : num.toFixed(2);
-}
-
-function renderTechnicalDetails(item) {
-  const technical = item.technical || {};
-  const rows = TECHNICAL_FIELDS
-    .filter(([key]) => technical[key] !== undefined && technical[key] !== null && technical[key] !== '')
-    .map(([key, label, format]) => `
-      <div class="tech-row">
-        <dt>${escapeHtml(label)}</dt>
-        <dd>${escapeHtml(format(technical[key]))}</dd>
-      </div>`);
-
-  elements.technicalDetails.hidden = rows.length === 0;
-  elements.technicalGrid.innerHTML = rows.join('');
+  if (animate) animateCompareSwap();
 }
 
 function openViewer(itemId) {
   const collection = state.filteredItems.length ? state.filteredItems : state.items;
   state.activeIndex = Math.max(0, collection.findIndex((item) => item.id === itemId));
-  state.activeView = 'output';
   updateViewer();
   elements.modal.classList.add('open');
   elements.modal.setAttribute('aria-hidden', 'false');
@@ -386,14 +259,12 @@ function openViewer(itemId) {
   elements.modal.querySelector('.close-button').focus();
 }
 
-function updateViewer() {
+function updateViewer(animate) {
   const item = getActiveItem();
   if (!item) return;
   elements.modalTitle.textContent = item.title;
-  elements.modalDescription.textContent = item.description || 'Browse the generated output, original object, and background, or drag to compare.';
   elements.compareRange.value = 50;
-  renderTechnicalDetails(item);
-  setActiveView(state.activeView);
+  renderCompare(animate);
   elements.previousButton.disabled = state.filteredItems.length <= 1;
   elements.nextButton.disabled = state.filteredItems.length <= 1;
 }
@@ -408,8 +279,7 @@ function navigateViewer(direction) {
   const collection = state.filteredItems.length ? state.filteredItems : state.items;
   if (!collection.length) return;
   state.activeIndex = (state.activeIndex + direction + collection.length) % collection.length;
-  state.activeView = 'output';
-  updateViewer();
+  updateViewer(true);
   animateViewerNavigation(direction);
 }
 
@@ -476,21 +346,6 @@ function bindEvents() {
   document.querySelectorAll('[data-close-modal]').forEach((element) => element.addEventListener('click', closeViewer));
   document.querySelectorAll('[data-close-qr]').forEach((element) => element.addEventListener('click', closeQr));
 
-  elements.viewTabs.addEventListener('click', (event) => {
-    const viewButton = event.target.closest('[data-view]');
-    if (viewButton) setActiveView(viewButton.dataset.view);
-  });
-
-  elements.modal.addEventListener('click', (event) => {
-    const zoomButton = event.target.closest('[data-zoom]');
-    if (zoomButton) {
-      const action = zoomButton.dataset.zoom;
-      if (action === 'in') setZoom(state.zoom + .25);
-      if (action === 'out') setZoom(state.zoom - .25);
-      if (action === 'reset') resetTransform();
-    }
-  });
-
   elements.compareRange.addEventListener('input', (event) => updateComparePosition(event.target.value));
   const startDragging = () => {
     elements.compareRange.classList.add('is-dragging');
@@ -512,39 +367,9 @@ function bindEvents() {
   elements.copyLinkButton.addEventListener('click', copyUrl);
 
   document.addEventListener('pointerdown', (event) => {
-    const button = event.target.closest('.primary-button, .secondary-button, .icon-button, .view-tab, .zoom-control-bar button, .chip');
+    const button = event.target.closest('.primary-button, .secondary-button, .icon-button, .stage-nav, .chip');
     if (button) createRipple(button, event);
   });
-
-  elements.viewerImage.addEventListener('dblclick', () => setZoom(state.zoom > 1 ? 1 : 2));
-  elements.viewerStage.addEventListener('wheel', (event) => {
-    if (state.activeView.startsWith('compare-')) return;
-    event.preventDefault();
-    setZoom(state.zoom + (event.deltaY < 0 ? .15 : -.15));
-  }, { passive: false });
-
-  elements.viewerImage.addEventListener('pointerdown', (event) => {
-    if (state.zoom <= 1) return;
-    state.dragging = true;
-    state.dragStartX = event.clientX;
-    state.dragStartY = event.clientY;
-    state.panStartX = state.panX;
-    state.panStartY = state.panY;
-    elements.viewerImage.classList.add('dragging');
-    elements.viewerImage.setPointerCapture(event.pointerId);
-  });
-  elements.viewerImage.addEventListener('pointermove', (event) => {
-    if (!state.dragging) return;
-    state.panX = state.panStartX + event.clientX - state.dragStartX;
-    state.panY = state.panStartY + event.clientY - state.dragStartY;
-    updateTransform();
-  });
-  const endDrag = () => {
-    state.dragging = false;
-    elements.viewerImage.classList.remove('dragging');
-  };
-  elements.viewerImage.addEventListener('pointerup', endDrag);
-  elements.viewerImage.addEventListener('pointercancel', endDrag);
 
   document.addEventListener('keydown', (event) => {
     if (elements.qrModal.classList.contains('open') && event.key === 'Escape') return closeQr();
@@ -595,9 +420,6 @@ async function loadGallery() {
       </div>`;
   }
 }
-
-const compareResizeObserver = new ResizeObserver(syncCompareImageSize);
-compareResizeObserver.observe(elements.compareFrame);
 
 if ('IntersectionObserver' in window && elements.gallerySection) {
   const sectionObserver = new IntersectionObserver((entries, observer) => {
