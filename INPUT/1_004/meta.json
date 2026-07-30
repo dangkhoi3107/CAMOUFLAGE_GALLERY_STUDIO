@@ -1,5 +1,5 @@
 {
-  "out_dir": "/kaggle/working/batch_camouflage_animal90_random_bg",
+  "out_dir": "/kaggle/working/batch_camouflage_animal90_per_render_random_bg",
   "base_model_id": "runwayml/stable-diffusion-v1-5",
   "canny_cn_id": "lllyasviel/sd-controlnet-canny",
   "soft_cn_id": "lllyasviel/control_v11p_sd15_softedge",
@@ -49,7 +49,7 @@
   "soft_mask_floor": 0.05,
   "soft_mask_ceiling": 0.9,
   "debug_mask": false,
-  "save_mask_images": true,
+  "save_mask_images": false,
   "control_scales": [
     0.02,
     1.5
@@ -87,8 +87,8 @@
   "job": {
     "animals": "deer",
     "image_path": "/kaggle/input/datasets/iamsouravbanerjee/animal-image-dataset-90-different-animals/animals/animals/deer/03d871997f.jpg",
-    "name": "batch_017_deer_s00_03d871997f_bg03_bg22_seed1700040",
-    "seed": 1700040,
+    "name": "batch_017_deer_s00_03d871997f_bg01_fibrous_0115_seed1700020",
+    "seed": 1700020,
     "prompt_bg": "",
     "prompt_sub": "a hidden deer silhouette seamlessly integrated into the background, subtle facial cues, optical illusion, camouflage",
     "bg_strength": 0.52

@@ -298,12 +298,13 @@ main { overflow: hidden; }
 
 .viewer-stage {
   position: relative;
+  container-type: size;
   flex: 1 1 0;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  display: flex;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 12px;
   padding: 14px;
   background: #090b0d;
@@ -319,7 +320,6 @@ main { overflow: hidden; }
 }
 
 .stage-nav {
-  flex: 0 0 auto;
   align-self: center;
   width: 46px;
   height: 46px;
@@ -332,25 +332,30 @@ main { overflow: hidden; }
 }
 .stage-nav:disabled { opacity: .3; pointer-events: none; }
 
-.compare-frame { position: relative; flex: 1 1 auto; min-width: 0; height: 100%; overflow: hidden; border-radius: 16px; background: #050607; }
+.compare-frame { position: relative; justify-self: center; align-self: center; width: min(100%, 100cqh); aspect-ratio: 1 / 1; overflow: hidden; border-radius: 16px; background: #050607; }
 .compare-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; user-select: none; }
-.compare-overlay { position: absolute; inset: 0; clip-path: inset(0 50% 0 0); }
+.compare-overlay { position: absolute; inset: 0; clip-path: inset(0 0 0 0); }
 .compare-divider { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: rgba(255,255,255,.85); box-shadow: 0 0 6px rgba(0,0,0,.4); transform: translateX(-50%); pointer-events: none; transition: box-shadow .2s var(--ease); }
 .compare-frame.is-dragging .compare-divider { width: 2.5px; box-shadow: 0 0 10px rgba(0,0,0,.55); }
 
-/* Compare control bar — sits below the image, never overlapping it */
+/* Compare control bar — overlaid on the frame itself, so its width always
+   matches the image's actual edges instead of the (possibly letterboxed)
+   outer stage width. */
 .compare-control-bar {
-  flex: 0 0 auto;
-  padding: 14px 22px 18px;
-  border-top: 1px solid var(--line);
-  background: var(--surface);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: 28px 18px 14px;
+  background: linear-gradient(to top, rgba(5,6,7,.85), rgba(5,6,7,.5) 60%, transparent);
 }
 .compare-control-labels { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-.compare-control-label { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; transition: color .2s var(--ease); }
+.compare-control-label { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0,0,0,.6); transition: color .2s var(--ease); }
 .compare-control-label.right { text-align: right; }
 
 .compare-range {
-  --fill: 50%;
+  --fill: 100%;
   display: block;
   width: 100%;
   height: 44px;
@@ -463,7 +468,7 @@ main { overflow: hidden; }
   .viewer-stage { padding: 10px; gap: 8px; }
   .stage-nav { width: 38px; height: 38px; }
   .compare-frame { border-radius: 10px; }
-  .compare-control-bar { padding: 12px 16px calc(14px + env(safe-area-inset-bottom)); }
+  .compare-control-bar { padding: 22px 14px calc(12px + env(safe-area-inset-bottom)); }
   .qr-panel { padding: 26px 20px; }
 }
 

@@ -110,19 +110,19 @@
               <img id="compareOutput" alt="" draggable="false" />
             </div>
             <div class="compare-divider" id="compareDivider" aria-hidden="true"></div>
+
+            <div class="compare-control-bar" id="compareControlBar">
+              <div class="compare-control-labels">
+                <span class="compare-control-label left">Input Object</span>
+                <span class="compare-control-label right">Generated Output</span>
+              </div>
+              <input class="compare-range" id="compareRange" type="range" min="0" max="100" value="100" aria-label="Drag to compare input object and generated output" />
+            </div>
           </div>
 
           <button class="stage-nav next" id="nextButton" type="button" aria-label="Next result">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
           </button>
-        </div>
-
-        <div class="compare-control-bar" id="compareControlBar">
-          <div class="compare-control-labels">
-            <span class="compare-control-label left">Input Object</span>
-            <span class="compare-control-label right">Generated Output</span>
-          </div>
-          <input class="compare-range" id="compareRange" type="range" min="0" max="100" value="50" aria-label="Drag to compare input object and generated output" />
         </div>
       </div>
     </div>

@@ -263,7 +263,7 @@ function updateViewer(animate) {
   const item = getActiveItem();
   if (!item) return;
   elements.modalTitle.textContent = item.title;
-  elements.compareRange.value = 50;
+  elements.compareRange.value = 100;
   renderCompare(animate);
   elements.previousButton.disabled = state.filteredItems.length <= 1;
   elements.nextButton.disabled = state.filteredItems.length <= 1;

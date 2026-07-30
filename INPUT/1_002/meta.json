@@ -87,8 +87,8 @@
   "job": {
     "animals": "deer",
     "image_path": "/kaggle/input/datasets/iamsouravbanerjee/animal-image-dataset-90-different-animals/animals/animals/deer/03d871997f.jpg",
-    "name": "batch_017_deer_s00_03d871997f_bg00_7d2652c95ab57a4ae5fb72d44d47196c_seed1700010",
-    "seed": 1700010,
+    "name": "batch_017_deer_s00_03d871997f_bg02_bg3_seed1700030",
+    "seed": 1700030,
     "prompt_bg": "",
     "prompt_sub": "a hidden deer silhouette seamlessly integrated into the background, subtle facial cues, optical illusion, camouflage",
     "bg_strength": 0.52
